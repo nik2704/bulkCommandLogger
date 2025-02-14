@@ -6,36 +6,54 @@
 #include "commandBlock.h"
 
 
-/**#include <algorithm>
+/**
  * @brief Класс CommandBlockQueue представляет очередь блоков команд.
- * 
  */
-class CommandBlockQueue {
+class CommandBlockQueue final {
 public:
     using iterator = std::deque<CommandBlock>::iterator; /**< Тип итератора для блока команд. */
     using const_iterator = std::deque<CommandBlock>::const_iterator; /**< Тип константного итератора для блока команд. */
 
-    // CommandBlockQueue() : level_(0) { };
     /**
      * @brief Оператор присваивания удален.
      * 
      */
     CommandBlockQueue& operator=(const CommandBlockQueue&) = delete;
 
-//---------------------------------
-
+    /**
+     * @brief Добавить команду в очередь.
+     * 
+     * @param command_text Текст команды.
+     * @param level Уровень вложенности команды.
+     */
     void addCommand(const std::string& command_text, std::size_t level);
 
+    /**
+     * @brief Открыть новый блок команд.
+     * 
+     * @param isDynamic Флаг, указывающий, является ли блок динамическим.
+     */
     void openBlock(bool isDynamic);
 
+    /**
+     * @brief Закрыть текущий блок команд.
+     * 
+     * @param disable_printing Флаг, запрещающий вывод блока.
+     * @param level Уровень вложенности команды.
+     */
     void closeBlock(bool disable_printing, std::size_t level);
 
+    /**
+     * @brief Записать содержимое очереди в лог.
+     */
     void logCommandQueue();
 
+    /**
+     * @brief Получить размер очереди блоков команд.
+     * 
+     * @return std::size_t Количество блоков в очереди.
+     */
     std::size_t Size() const;
-
-//------------------------------
-
 
     /**
      * @brief Получить итератор на начало очереди блоков.
@@ -72,46 +90,13 @@ public:
      * @param queue Объект очереди блоков команд.
      * @return std::ostream& Поток вывода.
      */
-    friend std::ostream& operator<<(std::ostream& os, const CommandBlockQueue& queue) {
-        for (auto it = queue.begin(); it < queue.end(); ++it) {
-            // os << "Level:" << queue.level_ << ", Active:" << (*it).isActive() << ", Printed:" << (*it).isPrinted() << ", Dynamic:" << (*it).isDynamic() << ": ";
-
-            // if (!(*it).isEmpty()) {
-                bool start = true;
-
-                for (const auto& command : (*it).getCommands()) {
-                    if (!start) {
-                        os << ", ";
-                    }
-
-                    os << command;
-                    start = false;
-                }
-
-                std::cout << std::endl;
-            // }
-
-        }
-
-        os << std::endl;
-        
-        return os;
-    }
+    friend std::ostream& operator<<(std::ostream& os, const CommandBlockQueue& queue);
 
 private:
-    // std::size_t level_;
     std::deque<CommandBlock> blocks_; /**< Очередь блоков команд. */
 
     template <typename Predicate>
-    std::optional<std::size_t> findBlockIndex(Predicate predicate) const {
-        auto it = std::find_if(blocks_.begin(), blocks_.end(), predicate);
-
-        if (it != blocks_.end()) {
-            return std::distance(blocks_.begin(), it);
-        }
-
-        return std::nullopt;
-    }
+    std::optional<std::size_t> findBlockIndex(Predicate predicate) const;
 
     void logDynamicBlocks();
     void logBlocks(std::size_t index);
