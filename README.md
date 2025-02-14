@@ -18,6 +18,8 @@ project_root/
 │   ├── commandBlockQueue.cpp
 │   ├── commandBlock.h
 │   ├── commandBlock.cpp
+│   ├── command.h
+│   ├── command.cpp
 │── README.md
 │── CMakeLists.txt
 ```
@@ -45,6 +47,9 @@ project_root/
 
 ### `CommandBlock`
 Представляет отдельный блок команд, содержащий список команд и флаг динамичности.
+
+### `Command`
+Представляет собой отдельную команду с текстовым содержимым.
 
 ## Сборка и запуск
 
